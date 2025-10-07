@@ -29,7 +29,7 @@ analyzeButton.addEventListener('click', async () => {
             const worker = await Tesseract.createWorker('kor'); // 한국어 모델 사용
             
             await worker.setParameters({
-        tessedit_char_blacklist: '0123456789', '무선', '랜제공','제공',
+        tessedit_char_blacklist: '0123456789',
     });
             
             const ret = await worker.recognize(file);
