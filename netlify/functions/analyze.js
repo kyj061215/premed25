@@ -193,8 +193,8 @@ case "학문의 세계":
         body: JSON.stringify(analysisResult),
     };
 
-  } catch (error) {
+  }}} catch (error) {
     console.error('백엔드 오류:', error);
     return { statusCode: 500, body: JSON.stringify({ message: '분석 중 서버 오류가 발생했습니다.' }) };
+   };
   }
-};
