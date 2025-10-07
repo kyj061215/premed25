@@ -3,15 +3,56 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>의예과 수료 현황 분석</title>
+    <title>서울대학교 의예과 24학번 수료 조건 분석</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <div class="container">
-        <h1>시간표 사진으로 이수 현황 분석하기</h1>
-        <p>시간표 사진을 모두 선택해서 업로드해주세요.</p>
+        <h1>서울대학교 의예과 24학번 수료 조건 분석</h1>
+        <p class="notice">❗️본 사이트는 서울대학교 의예과 학생회가 학우분들의 편의를 위해 제작한 사이트로, <br>오류가 발생할 수 있으니 참고용으로만 사용해주시길 바랍니다.❗️</p>
+        <p class="b">시간표 사진을 모두 선택해서 업로드해주세요.</p>
         <input type="file" id="timetable-files" multiple accept="image/*">
+
+        <div class="checklist">
+            <h2>필수 수료 요건</h2>
+            <div class="check-item">
+                <input type="checkbox" id="volunteer" name="volunteer">
+                <label for="volunteer">60시간 이상의 봉사활동 (보라매병원 포함)</label>
+            </div>
+            <div class="check-item">
+                <input type="checkbox" id="cpr" name="cpr">
+                <label for="cpr">CPR 교육 이수</label>
+            </div>
+            <div class="check-item">
+                <input type="checkbox" id="leadership" name="leadership">
+                <label for="leadership">인성·리더십 교육 모듈1, 모듈2 이수</label>
+            </div>
+            <div class="check-item">
+                <input type="checkbox" id="reading" name="reading">
+                <label for="reading">독서 일기 20편 이상 제출</label>
+            </div>
+        </div>
+        <div class="checklist">
+            <h2>선택 수료 요건</h2>
+            <div class="check-item">
+                <input type="checkbox" id="volunteer" name="volunteer">
+                <label for="volunteer">인문사회계열 과목 20학점 이상 이수</label>
+            </div>
+            <div class="check-item">
+                <input type="checkbox" id="cpr" name="cpr">
+                <label for="cpr">의학 연구의 실제(전선, 3학점) 수강</label>
+            </div>
+            <div class="check-item">
+                <input type="checkbox" id="leadership" name="leadership">
+                <label for="leadership">CPM(맞춤형 교육과정) 이수 (*20학점 이상, 평점 2.0 이상)</label>
+            </div>
+            <div class="check-item">
+                <input type="checkbox" id="reading" name="reading">
+                <label for="reading">TEPS 453점, IBT TOEFL 114점 이상 (*수료 직전 3학기 이내 성적)</label>
+            </div>
+        </div>
         <button id="analyze-button">분석 시작!</button>
+
         <div id="loading" class="hidden">
             <p>분석 중입니다... 잠시만 기다려주세요.</p>
         </div>
