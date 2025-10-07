@@ -12,7 +12,7 @@ exports.handler = async (event) => {
     }
 
     // 2. 수료 기준 데이터 파일 읽어오기
-    const requirementsPath = path.join(__dirname, '..', '..', 'requirements.json');
+    const requirementsPath = path.join(__dirname, '..', 'requirements.json');
     const requirementsData = JSON.parse(fs.readFileSync(requirementsPath, 'utf8'));
 
     // 3. 분석 로직 시작
