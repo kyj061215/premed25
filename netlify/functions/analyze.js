@@ -170,6 +170,12 @@ exports.handler = async (event) => {
         completed: otherCompletedCourses,
         displayType: 'list_completed_only'
     };
+    // --- 여기에 체크리스트 결과 추가 ---
+    analysisResult["기타 수료 요건"] = {
+        description: "비교과 수료 요건 달성 현황입니다.",
+        data: checklist, // 프론트에서 받은 데이터를 그대로 다시 보냄
+        displayType: 'checklist'
+    };
 
 
     // 5. 최종 분석 결과 전송
