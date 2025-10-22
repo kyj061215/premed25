@@ -83,7 +83,7 @@ h3 {
    4. 버튼 및 상태 표시
    ================================= */
 button#analyze-button { /* ID 추가하여 구체성 높임 */
-    background-color: #007bff;
+    background-color: #3694f7;
     color: white;
     border: none;
     padding: 12px 24px;
@@ -95,7 +95,7 @@ button#analyze-button { /* ID 추가하여 구체성 높임 */
 }
 
 button#analyze-button:hover {
-    background-color: #0056b3;
+    background-color: #3694f7;
 }
 
 .error-notice, .alert {
