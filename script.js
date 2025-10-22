@@ -12,6 +12,12 @@ const choices = new Choices(electiveSelectElement, {
     placeholderValue: '이수 완료한 과목을 선택하세요...',
     searchPlaceholderValue: '과목 검색...',
     removeItemText: '선택 취소', // 'Remove item' 텍스트 변경
+    // --- 여기에 두 줄을 추가하세요 ---
+    maxItemCount: 4, // 1. 최대 선택 개수를 4개로 제한
+    maxItemText: (maxItemCount) => { // 2. 4개 초과 선택 시 보여줄 메시지
+      return `4개까지만 선택할 수 있습니다.`;
+    },
+    // ------------------------------------
 });
 // ===================================
 
