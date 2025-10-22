@@ -21,6 +21,15 @@ const academiaChoices = new Choices(academiaSelectElement, {
     searchPlaceholderValue: '과목 검색...',
     // 학문의 세계는 개수 제한이 없으므로 maxItemCount 옵션은 제외
 });
+// --- 3. '예체능' Choices.js 초기화 추가 ---
+const artsSelectElement = document.getElementById('arts-and-sports-select');
+const artsChoices = new Choices(artsSelectElement, {
+    removeItemButton: true,
+    placeholder: true,
+    placeholderValue: '수강 과목을 선택하세',
+    searchPlaceholderValue: '과목 검색...',
+    // 예체능은 개수 제한이 없으므로 maxItemCount는 제외
+});
 // ===================================
 
 // '분석 시작!' 버튼 클릭 이벤트
@@ -61,6 +70,9 @@ analyzeButton.addEventListener('click', async () => {
         const selectedAcademia = academiaChoices.getValue(true);
         completedCourses.push(...selectedAcademia);
         // ---------------------------------------------
+            // --- 1-5. '예체능' 과목 가져오기 (방식 변경) ---
+        const selectedArts = artsChoices.getValue(true);
+        completedCourses.push(...selectedArts);
 
         const allText = completedCourses.join(' ');
         });
