@@ -116,7 +116,11 @@ button#analyze-button:hover {
     /* placeholder 텍스트가 잘리지 않도록 최소 높이를 확보합니다. */
     min-height: 44px; 
 }
-
+.choices__input--cloned {
+    white-space: normal !important; /* 텍스트가 길어지면 자동으로 줄바꿈 되도록 강제 */
+    height: auto !important;        /* 내용에 맞게 높이가 자동으로 늘어나도록 설정 */
+    padding: 2px;
+}
 /* --- 선택된 과목 태그 스타일 --- */
 .choices__list--multiple .choices__item {
     background-color: #d2e6f8; /* 태그 배경색 (파란색 계열) */
