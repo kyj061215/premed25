@@ -98,6 +98,17 @@ analyzeButton.addEventListener('click', async () => {
                 completedCourses.push('타단과대 전공');
             }
         }
+        
+                // --- '음미대, 미학과 전공, 교양' 수강 횟수 가져오기 추가 ---
+        const extraAnSCheckbox = document.getElementById('extra-artsandsports-checkbox');
+        const extraAnSCountInput = document.getElementById('extra-artsandsports-count');
+
+        if (extraAnSCheckbox.checked && extraAnSCountInput.value) {
+            const count = parseInt(extraAnSCountInput.value, 10) || 0;
+            for (let i = 0; i < count; i++) {
+                completedCourses.push('음미대, 미학과 전공/교양');
+            }
+        }
 
         // --- 2. 비교과 체크리스트 데이터 수집 ---
         const checklistData = {
