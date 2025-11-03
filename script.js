@@ -244,7 +244,56 @@ function displayResults(data) {
                     html += `<p><strong>📝 남은 영역:</strong> ${details.remaining.join(', ')}</p>`;
                 }
                 break;
-            
+                
+// displayResults 함수 내부의 switch 문에 이 case를 추가하세요.
+
+            case 'academia_group_count': // ★ 새로 추가된 케이스
+                const isGroupMet = details.completedGroupCount >= details.requiredGroupCount;
+                const isCreditMet = details.totalAcademiaCredits >= details.requiredCredits;
+                
+                const remainingGroupsCount = Math.max(0, 5 - details.completedGroupCount);
+                const remainingCredits = Math.max(0, details.requiredCredits - details.totalAcademiaCredits);
+
+                // 그룹 충족 현황
+                html += `<p class="summary ${isGroupMet ? 'completed' : 'in-progress'}">
+                             <strong>그룹: 5개 영역 중 ${details.completedGroupCount}개 영역 이수 (${remainingGroupsCount}개 영역 남음) ${isGroupMet ? '✔️' : ''}</strong>
+                         </p>`;
+                
+                // 학점 충족 현황
+                html += `<p class="summary ${isCreditMet ? 'completed' : 'in-progress'}">
+                             <strong>학점: ${details.requiredCredits}학점 중 ${details.totalAcademiaCredits}학점 이수 (${remainingCredits}학점 남음) ${isCreditMet ? '✔️' : ''}</strong>
+                         </p>`;
+
+                // 이수한 과목 목록 (영역 표시)
+                if (details.completedCourses.length > 0) {
+                    const completedList = details.completedCourses.map(c => `${c.name} (${c.group})`).join(', ');
+                    html += `<p><strong>✅ 이수한 과목 (영역):</strong> ${completedList}</p>`;
+                }
+
+                // 미이수 영역 및 추천 과목 버튼 (그룹 조건 미충족 시)
+                if (!isGroupMet && details.remainingGroups.length > 0) {
+                    html += `<p><strong>📝 채워야 할 영역:</strong> ${details.remainingGroups.join(', ')}</p>`;
+                    
+                    html += '<div class="recommendation-area"><strong>💡 영역별 들을 수 있는 교양 (클릭하여 확인):</strong>';
+                    
+                    for (const groupName of details.remainingGroups) {
+                        const coursesInGroup = details.recommendedCoursesByGroup[groupName] || [];
+                        const elementId = `courses-list-${groupName.replace(/[^a-zA-Z0-9]/g, '')}`; // ID 고유화
+                        
+                        // 토글 버튼
+                        html += `<button class="toggle-button" onclick="toggleCourseList('${elementId}')">
+                                     ${groupName} 과목 목록 보기 (${coursesInGroup.length}개)
+                                 </button>`;
+                        
+                        // 숨겨진 과목 목록 Div (인라인 스타일로 display: none 처리)
+                        html += `<div id="${elementId}" class="course-list-hidden" style="display: none; margin: 5px 0 10px 10px; padding: 8px; background: #f9f9f9; border: 1px solid #eee; border-radius: 4px;">
+                                     ${coursesInGroup.join(', ')}
+                                 </div>`;
+                    }
+                    html += '</div>';
+                }
+                break;
+                
             case 'list_completed_only':
                 if (details.completed.length > 0) {
                   html += `<p><strong>✅ 이수한 과목:</strong> ${details.completed.join(', ')}</p>`;
@@ -292,5 +341,23 @@ function displayResults(data) {
         html += `</div></div>`;
     }
     resultArea.innerHTML = html;
+}
+// ===================================================
+//   ⬇️ 이 함수를 script.js 파일 맨 아래에 추가하세요 ⬇️
+// ===================================================
+
+/**
+ * 토글 버튼 클릭 시 과목 목록을 보여주거나 숨깁니다.
+ * @param {string} elementId - 보여주거나 숨길 div의 ID
+ */
+function toggleCourseList(elementId) {
+    const listElement = document.getElementById(elementId);
+    if (listElement) {
+        if (listElement.style.display === 'none') {
+            listElement.style.display = 'block';
+        } else {
+            listElement.style.display = 'none';
+        }
+    }
 }
 
