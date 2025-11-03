@@ -1,8 +1,9 @@
 // 이 파일의 위치: netlify/functions/analyze.js
 
-// 0. '학문의 세계' 과목 데이터 (사용자가 제공한 JSON)
-// 함수 밖에 정의하여 메모리에 한 번만 로드되도록 합니다.
+// 0. '학문의 세계' 과목 데이터 (함수 밖)
 const allAcademiaCourses = [
+    // (이전 단계에서 제공한 '학문의 세계' 150여 개 과목 목록... )
+    // (생략: 코드가 너무 길어지므로 이전 버전을 유지한다고 가정)
     { "name": "21세기 한국소설의 이해", "group": "언어와 문학" }, { "name": "고대그리스.로마문학의 세계", "group": "언어와 문학" }, { "name": "그리스.로마 신화", "group": "언어와 문학" },
     { "name": "도스토예프스키와 톨스토이", "group": "언어와 문학" }, { "name": "동서양 명작 읽기", "group": "언어와 문학" }, { "name": "라틴아메리카 문학과 사회", "group": "언어와 문학" },
     { "name": "문학과 정신분석", "group": "언어와 문학" }, { "name": "문학과 공연예술", "group": "언어와 문학" }, { "name": "문학과 철학의 대화", "group": "언어와 문학" },
@@ -25,7 +26,7 @@ const allAcademiaCourses = [
     { "name": "한국음악의 이해", "group": "문화와 예술" }, { "name": "한국의 신화", "group": "문화와 예술" }, { "name": "한자와 동양문화", "group": "문화와 예술" },
     { "name": "현대문화와 기독교", "group": "문화와 예술" }, { "name": "현대미술의 이해", "group": "문화와 예술" }, { "name": "현대음악의 이해", "group": "문화와 예술" },
     { "name": "현대종교와 문화", "group": "문화와 예술" },
-    {"name": "고고학개론", "group": "역사와 철학" }, { "name": "과학과 비판적 사고", "group": "역사와 철학" }, { "name": "과학의 철학적 이해", "group": "역사와 철학" }, // '이' -> '이해'로 수정 (index.html 기준)
+    {"name": "고고학개론", "group": "역사와 철학" }, { "name": "과학과 비판적 사고", "group": "역사와 철학" }, { "name": "과학의 철학적 이해", "group": "역사와 철학" },
     {"name": "규장각과 한국문화", "group": "역사와 철학" }, { "name": "근대 한국의 역사와 문화", "group": "역사와 철학" }, { "name": "현대 한국민족주의", "group": "역사와 철학" },
     {"name": "기독교와 서양문명", "group": "역사와 철학" }, { "name": "남북분단과 한국전쟁", "group": "역사와 철학" }, { "name": "논리학", "group": "역사와 철학" },
     {"name": "도덕적 추론", "group": "역사와 철학" }, { "name": "도시의 문화사", "group": "역사와 철학" }, { "name": "동서문명의 만남과 실크로드", "group": "역사와 철학" },
@@ -56,13 +57,8 @@ const allAcademiaCourses = [
     {"name": "한국정치의 분석과 이해", "group": "정치와 경제" }, { "name": "현대경제의 이해", "group": "정치와 경제" }, { "name": "현대사회와 법", "group": "정치와 경제" },
     {"name": "현대정치의 이해", "group": "정치와 경제" }, { "name": "영화 속 세계정치", "group": "정치와 경제" }
 ];
-// 0. '학문의 세계' 5개 영역 전체 목록
 const allAcademiaGroups = [
-    "언어와 문학",
-    "문화와 예술",
-    "역사와 철학",
-    "인간과 사회",
-    "정치와 경제"
+    "언어와 문학", "문화와 예술", "역사와 철학", "인간과 사회", "정치와 경제"
 ];
 
 exports.handler = async (event, context) => {
@@ -181,70 +177,119 @@ exports.handler = async (event, context) => {
         };
 
         // ======================================================
-        // 6. [요청하신 기능] "학문의 세계" 분석 (★ 신규 구현)
+        // 6. "학문의 세계" 분석 (이전 단계와 동일)
         // ======================================================
-        
-        const completedAcademiaCourses = []; // 이수한 과목 객체 {name, group}
-        const completedGroups = new Set();   // 이수한 영역 (Set: 중복 방지)
+        const completedAcademiaCourses = [];
+        const completedGroups = new Set();
         let totalAcademiaCredits = 0;
         const requiredAcademiaCredits = 12;
         const requiredGroupCount = 4;
 
-        // 6-1. 이수한 과목 분류 및 학점, 영역 계산
         allAcademiaCourses.forEach(course => {
             if (allText.includes(course.name)) {
-                completedAcademiaCourses.push(course); // {name: "...", group: "..."}
+                completedAcademiaCourses.push(course); 
                 completedGroups.add(course.group);
-                // (가정) '학문의 세계' 과목은 모두 3학점이라고 가정합니다.
-                totalAcademiaCredits += 3;
+                totalAcademiaCredits += 3; // (3학점으로 가정)
             }
         });
-
-        // 6-2. 미이수 영역 계산
         const remainingGroups = allAcademiaGroups.filter(group => !completedGroups.has(group));
-        
-        // 6-3. 미이수 영역별 추천 과목 목록 생성 (토글 버튼용)
         const recommendedCoursesByGroup = {};
         if (remainingGroups.length > 0) {
             remainingGroups.forEach(groupName => {
-                // 전체 과목 목록에서 해당 그룹 과목만 필터링
                 const coursesInGroup = allAcademiaCourses
                     .filter(course => course.group === groupName)
-                    .map(course => course.name); // 이름만 추출
+                    .map(course => course.name);
                 recommendedCoursesByGroup[groupName] = coursesInGroup;
             });
         }
-
-        // 6-4. 결과 객체 생성
         analysisResult["학문의 세계"] = {
             description: "5개 영역 중 4개 영역 이상, 총 12학점 이상 이수해야 합니다. (과목당 3학점으로 계산)",
-            displayType: "academia_group_count", // ★ 새로운 displayType
-            completedCourses: completedAcademiaCourses, // 이수한 과목 (객체 배열)
+            displayType: "academia_group_count",
+            completedCourses: completedAcademiaCourses,
             completedGroupCount: completedGroups.size,
             requiredGroupCount: requiredGroupCount,
             totalAcademiaCredits: totalAcademiaCredits,
             requiredCredits: requiredAcademiaCredits,
-            remainingGroups: remainingGroups, // 미이수 영역 (문자열 배열)
-            recommendedCoursesByGroup: recommendedCoursesByGroup // 미이수 영역별 과목 목록 (객체)
+            remainingGroups: remainingGroups,
+            recommendedCoursesByGroup: recommendedCoursesByGroup
         };
 
 
         // ======================================================
-        // 7. [TODO] 나머지 항목 분석
+        // 7. [요청하신 기능] "예체능" 분석 (★ 신규 구현)
         // ======================================================
+
+        // 7-1. 예체능 과목 전체 목록 (HTML 기준)
+        const allArtsAndSportsCourses = [
+            '건강과 삶', '골프', '교양연주', '농구', '댄스스포츠', '도예', 
+            '배구', '배드민턴', '소묘', '수묵화', '수영', '수채화', '야구', 
+            '양궁', '에어로빅', '운동과 건강', '운동과 영양', '체력단련', 
+            '축구', '탁구', '태권도', '테니스', '핸드볼', '호신술', 
+            '현대사회와 스포츠', '한국무용'
+        ];
+
+        // 7-2. 2학점 과목 목록 (HTML의 <option> 값 기준)
+        const twoCreditArts = [
+            '도예', 
+            '소묘', 
+            '수묵화', 
+            '수채화'
+        ];
+
+        const requiredArtsCredits = 3; // 필수 이수 학점
+        let totalArtsCredits = 0;      // 총 이수 학점
+        const completedArtsCourses = []; // 이수한 과목 목록
+        const recommendedArtsCourses = []; // 추천 (미이수) 과목 목록
+
+        // 7-3. 목록을 순회하며 학점 계산 및 목록 분리
+        allArtsAndSportsCourses.forEach(course => {
+            if (allText.includes(course)) {
+                // 이수한 과목
+                completedArtsCourses.push(course);
+                // 학점 계산
+                if (twoCreditArts.includes(course)) {
+                    totalArtsCredits += 2;
+                } else {
+                    totalArtsCredits += 1;
+                }
+            } else {
+                // 미이수한 과목
+                recommendedArtsCourses.push(course);
+            }
+        });
+
+        // 7-4. "음미대, 미학과 전공/교양" 추가 학점 계산
+        // (script.js에서 1학점당 "음미대, 미학과 전공/교양" 문자열 1개씩 보내기로 약속됨)
+        const extraArtsCredits = (allText.match(/음미대, 미학과 전공\/교양/g) || []).length;
+        if (extraArtsCredits > 0) {
+            totalArtsCredits += extraArtsCredits;
+            completedArtsCourses.push(`음미대/미학과 (${extraArtsCredits}학점)`);
+        }
+
+        // 7-5. 남은 학점 계산
+        const remainingArtsCredits = Math.max(0, requiredArtsCredits - totalArtsCredits);
+
+        // 7-6. 결과 객체 생성 (★ '전공 선택'과 동일한 "credit_count" 사용)
         analysisResult["예체능"] = {
-             description: "3학점 이상 이수 (이 기능은 현재 개발 중)",
-            displayType: "count",
-            completed: [],
-            requiredCount: 2 
+            description: `3학점 이상 이수해야 합니다. (도예, 소묘, 수묵화, 수채화 2학점 / 그 외 1학점)`,
+            displayType: "credit_count", // ★ '전공 선택'과 동일
+            completed: completedArtsCourses,
+            recommended: recommendedArtsCourses,
+            completedCredits: totalArtsCredits,
+            requiredCredits: requiredArtsCredits,
+            remainingCredits: remainingArtsCredits
         };
+
+        // ======================================================
+        // 8. "비교과" 분석 (이전 단계와 동일)
+        // ======================================================
         analysisResult["비교과"] = {
             description: "필수 요건 4개 모두, 선택 요건 4개 중 2개 이상 이수",
             displayType: "checklist",
             data: checklistData
         };
 
-        // 8. 최종 분석 결과 반환
+        // 9. 최종 분석 결과 반환
         return {
             statusCode: 200,
             body: JSON.stringify(analysisResult)
