@@ -303,7 +303,7 @@ button#analyze-button:hover {
 
 /* 4. (공통) 리스트가 펼쳐진(visible) 상태 */
 .course-list-hidden.visible {
-    max-height: 5000px;
+    max-height: 1000000000px;
     opacity: 1;
     margin: 5px 0 10px 10px;
     padding: 8px;
