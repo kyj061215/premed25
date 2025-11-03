@@ -138,8 +138,10 @@ analyzeButton.addEventListener('click', async () => {
             throw new Error('서버에서 오류가 발생했습니다.'); 
         }
 
-        const data = await response.json();
-        displayResults(data); // 결과 표시
+        const responseData = await response.json(); // 1. 변수 이름을 data -> responseData로 변경
+
+        // 2. responseData '안에 있는' analysisResult 객체를 전달
+        displayResults(responseData.analysisResult);
 
         localStorage.setItem('lastAnalysisTime', now.getTime());
 
