@@ -119,6 +119,13 @@ analyzeButton.addEventListener('click', async () => {
             'teps': document.getElementById('teps').checked,
         };
 
+        // ❗️❗️❗️ [디버깅 코드] ❗️❗️❗️
+        // 서버로 전송하기 직전의 데이터를 확인합니다.
+        console.log("===== 디버깅 시작 =====");
+        console.log("전송할 allText:", allText);
+        console.log("전송할 checklistData:", checklistData);
+        console.log("=====================");
+        
         // --- 3. 백엔드로 데이터 전송 ---
         const response = await fetch('/.netlify/functions/analyze', {
             method: 'POST',
