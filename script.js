@@ -251,13 +251,13 @@ function displayResults(data) {
                             // 봉사활동 링크 추가
                             remainingHtml += `<li class="requirement-item">${label} 
                                 <a href="https://www.1365.go.kr/vols/main.do" target="_blank" class="requirement-link">
-                                    (<br>봉사 시간 확인하러 가기 (*1365 의료봉사만 인정))
+                                    <br>봉사 시간 확인하러 가기 (*의료봉사만 인정)
                                 </a></li>`;
                         } else if (key === 'cpr') {
                             // CPR 링크 추가 (대한적십자사 교육 사이트)
                             remainingHtml += `<li class="requirement-item">${label} 
                                 <a href="https://health4u.snu.ac.kr/healthCare/CPR/_/view.do" target="_blank" class="requirement-link">
-                                    (CPR 교육 신청하러 가기)
+                                    CPR 교육 신청하러 가기
                                 </a></li>`;
                         } else {
                             // 나머지 (리더십, 독서일기)는 텍스트만
