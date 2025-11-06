@@ -351,7 +351,7 @@ button#analyze-button:hover {
     background-color: #3694f7; /* '분석' 버튼과 다른 색 (파란색) */
     font-size: 14px;
     padding: 8px 12px;
-    margin: 0; /* 불필요한 마진 제거 */
+    margin-bottom: 10px;
     flex-shrink: 0; /* 모바일에서 찌그러지지 않게 함 */
 }
 .save-button:hover {
