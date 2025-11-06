@@ -286,3 +286,40 @@ function toggleCourseList(elementId) {
         clickedElement.classList.add('visible');
     }
 }
+// ❗️❗️ [추가] 캡쳐 기능 함수 ❗️❗️
+/**
+ * 'result-area' div를 캡쳐하여 '졸업요건_분석결과.png'로 저장합니다.
+ */
+function captureResults() {
+    const captureButton = document.getElementById('capture-button');
+    if (captureButton) {
+        captureButton.innerText = '저장 중...';
+        captureButton.disabled = true;
+    }
+
+    const resultArea = document.getElementById('result-area');
+    
+    // 캡쳐 시 해상도를 2배로 높여 선명하게 저장
+    html2canvas(resultArea, { scale: 2 }) 
+        .then(canvas => {
+            // 임시 링크 생성
+            const link = document.createElement('a');
+            link.href = canvas.toDataURL('image/png');
+            link.download = '졸업요건_분석결과.png';
+            
+            // 링크 클릭 (다운로드) 및 제거
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+
+            // 버튼 텍스트 복구
+            if (captureButton) {
+                captureButton.innerText = '결과 이미지로 저장 📸';
+                captureButton.disabled = false;
+            }
+        })
+        .catch(err => {
+            console.error('캡쳐 중 오류 발생:', err);
+            if (captureButton) {
+                captureButton.innerText = '저장 실패. 다시 시도하세요.';
+                captureButton.disabled =
