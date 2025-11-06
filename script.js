@@ -318,8 +318,11 @@ function captureResults() {
                 captureButton.disabled = false;
             }
         })
-        .catch(err => {
+      .catch(err => {
             console.error('캡쳐 중 오류 발생:', err);
             if (captureButton) {
                 captureButton.innerText = '저장 실패. 다시 시도하세요.';
-                captureButton.disabled =
+                captureButton.disabled = false;
+            }
+        });
+}
