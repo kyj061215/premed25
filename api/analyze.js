@@ -2,13 +2,6 @@
 // 매뉴얼에도 적어놨지만, 자칫 잘못 바꾸면 사이트가 완전히 셧다운될 수 있습니다.
 // 그러니 수정해야 할 부분이 생길 경우, 교육국 단톡방에 보고 후 조치 부탁드립니다.
 // 모르겠을 땐 gemini에게 물어보는걸 추천드립니다!
-// 💡 추가: 정규식 특수 문자를 이스케이프하고, 정확히 일치하도록 경계(\b)를 사용합니다.
-const createSafeRegex = (searchTerm) => {
-    // 정규식 특수 문자들을 이스케이프 (\, ., *, +, ?, ^, $, {등)
-    const escapedTerm = searchTerm.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
-    // 문자열 경계(\b)를 사용하여 정확한 단어 일치만 허용합니다.
-    return new RegExp(`\\b${escapedTerm}\\b`, 'g'); 
-};
 // 💡 겹치는 41개 과목 목록 (지성 교양과 예체능 3학점에 모두 포함됨)
 const allSharedArtsCourses = [
     "공연예술의 이해", "대중예술의 이해", "동시대 미술과 현장", "디자인과 생활", 
@@ -191,10 +184,9 @@ export default async function handler(req, res) {
         const completedRequired = [];
         const remainingRequired = [];
 
-        // 💡 수정: 정규 표현식 매칭 로직 적용
+        // 💡 수정: 정규 표현식 매칭 로직 적용 (검색 완화)
         allRequiredCourses.forEach(course => {
-            const courseRegex = createSafeRegex(course);
-            if (allText.match(courseRegex)) completedRequired.push(course);
+            if (allText.includes(course)) completedRequired.push(course);
             else remainingRequired.push(course);
         });
 
@@ -223,10 +215,9 @@ export default async function handler(req, res) {
         const completedElectiveCourses = [];
         const recommendedElectiveCourses = [];
 
-        // 💡 수정: 정규 표현식 매칭 로직 적용
+       // 💡 수정: 정규 표현식 매칭 로직 적용 (검색 완화)
         allElectiveCourses.forEach(course => {
-            const courseRegex = createSafeRegex(course);
-            if (allText.match(courseRegex)) {
+            if (allText.includes(course)) {
                 completedElectiveCourses.push(course);
                 totalElectiveCredits += twoCreditElectives.includes(course) ? 2 : 3;
             } else {
@@ -240,7 +231,7 @@ export default async function handler(req, res) {
             completedElectiveCourses.push(`타단과대(자연대, 농생대, 공대, 수의대, 치대, 혁신공유학부) 전공 (${otherCollegeCredits}학점)`);
         }
         // 예외 규칙 적용: 음미대/미학과 전공 학점 중복 인정
-        const artsMajorAsElectiveCredits = (allText.match(createSafeRegex("음미대, 미학과 전공/교양")) || []).length;
+        const artsMajorAsElectiveCredits = (allText.match(/음미대, 미학과 전공\/교양/g) || []).length;
         if (artsMajorAsElectiveCredits > 0) {
             totalElectiveCredits += artsMajorAsElectiveCredits;
             completedElectiveCourses.push(`(예체능 충족 예외 인정) 음미대/미학과 전공 (${artsMajorAsElectiveCredits}학점)`);
@@ -270,18 +261,16 @@ export default async function handler(req, res) {
         const completedLiberalArts = [];
         const remainingLiberalArts = [];
 
-        // 💡 수정: 정규 표현식 매칭 로직 적용
+        // 💡 수정: 정규 표현식 매칭 로직 적용 (검색 완화)
         fixedLiberalArts.forEach(course => {
-           const courseRegex = createSafeRegex(course);
-             if (allText.match(courseRegex)) completedLiberalArts.push(course);
+             if (allText.includes(course)) completedLiberalArts.push(course);
             else remainingLiberalArts.push(course);
         });
 
         let foreignLanguageCount = 0;
-        // 💡 수정: 정규 표현식 매칭 로직 적용
+        // 💡 수정: 정규 표현식 매칭 로직 적용 (검색 완화)
         foreignLanguageOptions.forEach(lang => {
-            const langRegex = createSafeRegex(lang);
-            if (allText.match(langRegex)) {
+            if (allText.includes(lang)) {
                 completedLiberalArts.push(lang);
                 foreignLanguageCount++;
             }
