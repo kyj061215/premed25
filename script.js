@@ -41,6 +41,7 @@ const artsChoices_3 = new Choices(artsSelectElement_3, {
     searchPlaceholderValue: '과목 검색...',
 });
 
+// 💡 수정: 외국어 목록 초기화
 const languageSelectElement = document.getElementById('foreign-language-select');
 const languageChoices = new Choices(languageSelectElement, {
     removeItemButton: true,
@@ -64,9 +65,13 @@ analyzeButton.addEventListener('click', async () => {
         });
         const selectedElectives = choices.getValue(true);
         completedCourses.push(...selectedElectives);
+        
+        // 💡 수정: 기존 index.html에는 #liberal-arts-courses-list 내부에 체크박스가 없으므로, 해당 부분 로직을 건너뜁니다.
+        // #liberal-arts-courses-list는 필수 교양의 체크박스 그리드이므로, 해당 ID 내의 체크박스를 확인합니다.
         document.querySelectorAll('#liberal-arts-courses-list input[type="checkbox"]:checked').forEach(checkbox => {
-            completedCourses.push(checkbox.value);
+             completedCourses.push(checkbox.value);
         }); 
+        
         const selectedLanguages = languageChoices.getValue(true);
         completedCourses.push(...selectedLanguages);
         
@@ -88,17 +93,7 @@ analyzeButton.addEventListener('click', async () => {
         const selectedArts_3 = artsChoices_3.getValue(true);
         completedCourses.push(...selectedArts_3);
 
-        // 💡 중요: 정규식 매칭을 위해 각 과목명 주변에 공백을 추가하여 안정성 확보
-        const allText = ' ' + completedCourses.join(' ') + ' ';
-        
-        const otherCollegeCheckbox = document.getElementById('other-college-checkbox');
-        const otherCollegeCountInput = document.getElementById('other-college-count');
-        if (otherCollegeCheckbox && otherCollegeCheckbox.checked && otherCollegeCountInput && otherCollegeCountInput.value) {
-            const count = parseInt(otherCollegeCountInput.value, 10) || 0;
-            for (let i = 0; i < count; i++) {
-                completedCourses.push('타단과대 전공');
-            }
-        }
+        // 💡 기타 학점 로직은 index.html에서 제거되었으므로, 해당 변수 선언/사용 로직은 삭제합니다.
         
         const extraAnSCheckbox = document.getElementById('extra-artsandsports-checkbox');
         const extraAnSCountInput = document.getElementById('extra-artsandsports-count'); 
@@ -108,6 +103,9 @@ analyzeButton.addEventListener('click', async () => {
                 completedCourses.push('음미대, 미학과 전공/교양');
             }
         }
+
+        // 💡 중요: 정규식 매칭을 위해 각 과목명 주변에 공백을 추가하여 안정성 확보
+        const allText = ' ' + completedCourses.join(' ') + ' ';
         
         const checklistData = {
             'volunteer': document.getElementById('volunteer').checked,
@@ -127,7 +125,9 @@ analyzeButton.addEventListener('click', async () => {
         });
 
         if (!response.ok) {
-            throw new Error('서버에서 오류가 발생했습니다.'); 
+            // 서버 오류 시 HTTP 상태 코드가 200이 아니면 여기서 오류 발생
+            const errorResponse = await response.json();
+            throw new Error(errorResponse.error || '서버 응답 오류'); 
         }
 
         const responseData = await response.json();
