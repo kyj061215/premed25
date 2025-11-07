@@ -24,7 +24,6 @@ const academiaChoices = new Choices(academiaSelectElement, {
 });
 
 // 💡 수정: 예체능 1/2학점 목록 초기화 (ID: arts-and-sports-select-1-2)
-// index.html에서 arts-and-sports-select를 이 ID로 변경했습니다.
 const artsSelectElement_1_2 = document.getElementById('arts-and-sports-select-1-2');
 const artsChoices_1_2 = new Choices(artsSelectElement_1_2, {
     removeItemButton: true,
@@ -33,7 +32,7 @@ const artsChoices_1_2 = new Choices(artsSelectElement_1_2, {
     searchPlaceholderValue: '과목 검색...',
 });
 
-// 💡 새로 추가: 예체능 3학점 목록 초기화
+// 💡 수정: 예체능 3학점 목록 초기화
 const artsSelectElement_3 = document.getElementById('arts-and-sports-select-3');
 const artsChoices_3 = new Choices(artsSelectElement_3, {
     removeItemButton: true,
@@ -41,8 +40,6 @@ const artsChoices_3 = new Choices(artsSelectElement_3, {
     placeholderValue: '3학점 강의 선택',
     searchPlaceholderValue: '과목 검색...',
 });
-
-// ❌ 기존 artsChoices 초기화 코드는 삭제되었습니다.
 
 const languageSelectElement = document.getElementById('foreign-language-select');
 const languageChoices = new Choices(languageSelectElement, {
