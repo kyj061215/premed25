@@ -368,40 +368,7 @@ function captureResults() {
             }
         });
 }
-// script.js 파일 가장 하단에 추가합니다.
-
-/**
- * 💡 CSS 파일을 건드리지 않고 특정 레이아웃 문제를 해결하기 위한 스크립트.
- * index.html의 .extra-option-container 요소에 Flexbox 스타일을 직접 적용합니다.
- */
-function applyLayoutFix() {
-    // 1. 음미대/미학과 전공 학점 입력 컨테이너 찾기
-    const extraArtsContainer = document.querySelector('#extra-artsandsports-checkbox').closest('.extra-option-container');
-    
-    // 2. 기타 학점 입력 컨테이너 찾기
-    const extraCreditsContainer = document.querySelector('#extra-credits-input').closest('.extra-option-container');
-
-    // 3. 찾은 컨테이너에 스타일 적용
-    if (extraArtsContainer) {
-        extraArtsContainer.style.display = 'flex';
-        extraArtsContainer.style.alignItems = 'flex-start'; // 시작 부분 정렬
-        extraArtsContainer.style.gap = '15px'; // 항목 간 간격
-    }
-
-    if (extraCreditsContainer) {
-        extraCreditsContainer.style.display = 'flex';
-        extraCreditsContainer.style.alignItems = 'center';
-        extraCreditsContainer.style.gap = '15px'; // 항목 간 간격
-
-        // 레이블의 공간 확보 및 줄 바꿈 허용 (기타 학점 레이블이 길어서 필요)
-        const label = extraCreditsContainer.querySelector('label[for="extra-credits-input"]');
-        if (label) {
-            label.style.flexGrow = '1';
-            label.style.whiteSpace = 'normal'; // 긴 텍스트 줄바꿈 허용
-        }
-        
-        // 숫자 입력 필드가 축소되지 않도록 설정
-        const inputNumber = extraCreditsContainer.querySelector('input[type="number"]');
+ctor('input[type="number"]');
         if (inputNumber) {
             inputNumber.style.flexShrink = '0';
         }
@@ -414,5 +381,4 @@ function applyLayoutFix() {
     });
 }
 
-// 페이지 로드 후 레이아웃 수정 함수 실행
 window.addEventListener('DOMContentLoaded', applyLayoutFix);
