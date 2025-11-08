@@ -15,12 +15,15 @@ const choices = new Choices(electiveSelectElement, {
     searchPlaceholderValue: '과목 검색...',
     duplicateItemsAllowed: false,
 });
+
 const academiaSelectElement = document.getElementById('foundations-of-academia-select');
 const academiaChoices = new Choices(academiaSelectElement, {
     removeItemButton: true,
     placeholder: true,
     placeholderValue: '수강한 지성 교양 과목을 검색 및 선택하세요',
     searchPlaceholderValue: '과목 검색...',
+    // 💡 수정: 정렬 문제 해결을 위해 shouldSort: false 추가
+    shouldSort: false,
 });
 
 // 💡 수정: 예체능 1/2학점 목록 초기화 (ID: arts-and-sports-select-1-2)
@@ -92,7 +95,8 @@ analyzeButton.addEventListener('click', async () => {
         const selectedArts_3 = artsChoices_3.getValue(true);
         completedCourses.push(...selectedArts_3);
 
-        // 💡 기타 및 음미대 학점 수집 (index.html에서 id가 extra-credits-input인 요소를 찾아서 처리)
+        // 💡 기타 학점 수집 로직 (index.html에서 제거되었으므로, 해당 로직을 주석처리 또는 제거)
+        /*
         const extraCreditsInput = document.getElementById('extra-credits-input');
         if (extraCreditsInput && extraCreditsInput.value) {
              const count = parseInt(extraCreditsInput.value, 10) || 0;
@@ -100,7 +104,20 @@ analyzeButton.addEventListener('click', async () => {
                  completedCourses.push('기타 학점'); // 1학점 = "기타 학점" 문자열 1개
              }
         }
+        */
         
+        // 💡 수정: 타단과대 전공 학점 수집 로직 (이전 대화에서 누락되었던 부분)
+        const otherCollegeCheckbox = document.getElementById('other-college-checkbox');
+        const otherCollegeCountInput = document.getElementById('other-college-count'); 
+        if (otherCollegeCheckbox && otherCollegeCheckbox.checked && otherCollegeCountInput && otherCollegeCountInput.value) {
+            const count = parseInt(otherCollegeCountInput.value, 10) || 0;
+            // analyze.js에서 이 문자열을 세도록 되어 있음
+            for (let i = 0; i < count; i++) {
+                completedCourses.push('타단과대 전공'); 
+            }
+        }
+
+
         const extraAnSCheckbox = document.getElementById('extra-artsandsports-checkbox');
         const extraAnSCountInput = document.getElementById('extra-artsandsports-count'); 
         if (extraAnSCheckbox && extraAnSCheckbox.checked && extraAnSCountInput && extraAnSCountInput.value) {
@@ -198,7 +215,7 @@ function displayResults(data) {
                     html += `<p><strong>✅ 이수한 과목:</strong> ${details.completed.join(', ')}</p>`;
                 }
                 break;
-case 'credit_count':
+            case 'credit_count':
                 const isCreditsCompleted = details.remainingCredits === 0;
                 html += `<p class="summary ${isCreditsCompleted ? 'completed' : 'in-progress'}"><strong>상태: ${details.requiredCredits}학점 중 ${details.completedCredits}학점 이수 (${details.remainingCredits}학점 남음) ${isCreditsCompleted ? '✔️' : ''}</strong></p>`;
                 if (details.completed.length > 0) html += `<p><strong>✅ 이수한 과목:</strong> ${details.completed.join(', ')}</p>`;
@@ -214,51 +231,51 @@ case 'credit_count':
                 }
                 break;
 
-case 'academia_extension_group_count': 
-    const isGroupMet = details.isGroupMet;  
-    const totalCoreGroups = details.requiredGroupCount;
-    const completedCoreGroups = details.completedGroupCount;
-    const remainingGroupsCount = Math.max(0, totalCoreGroups - completedCoreGroups);  
-    const totalExtensionCourses = details.completedExtensionCourses.length;
+            case 'academia_extension_group_count': 
+                const isGroupMet = details.isGroupMet;  
+                const totalCoreGroups = details.requiredGroupCount;
+                const completedCoreGroups = details.completedGroupCount;
+                const remainingGroupsCount = Math.max(0, totalCoreGroups - completedCoreGroups);  
+                const totalExtensionCourses = details.completedExtensionCourses.length;
 
-    // 1. 💡 필수 영역 충족 여부만 간결하게 표시
-    html += `<p class="summary ${isGroupMet ? 'completed' : 'in-progress'}">
-                <strong>지성의 열쇠 (3개 영역): ${totalCoreGroups}개 영역 중 ${completedCoreGroups}개 완료 (${remainingGroupsCount}개 남음) ${isGroupMet ? '✔️' : ''}</strong>
-            </p>`;
-    // 2. 지성의 확장 학점 (새로운 정보) - 유지
-    html += `<p class="summary completed"><strong>지성의 확장 학점: ${details.totalExtensionCredits}학점 이수 (총 ${totalExtensionCourses}과목)</strong></p>`;  
-    
-    // 4. 이수한 과목 상세 - 유지
-    if (details.completedAcademiaCourses.length > 0) {
-        const completedAcademiaList = details.completedAcademiaCourses.map(c => `${c.name} (${c.group})`).join(', ');
-        html += `<p><strong>✅ 지성의 열쇠 이수 과목 (4개 영역 분류):</strong> ${completedAcademiaList}</p>`;
-    }
-    if (details.completedExtensionCourses.length > 0) {
-        const completedExtensionList = details.completedExtensionCourses.map(c => `${c.name} (${c.credit}학점)`).join(', ');
-        html += `<p><strong>✅ 지성의 확장 이수 과목:</strong> ${completedExtensionList}</p>`;
-    }
+                // 1. 💡 필수 영역 충족 여부만 간결하게 표시
+                html += `<p class="summary ${isGroupMet ? 'completed' : 'in-progress'}">
+                    <strong>지성의 열쇠 (3개 영역): ${totalCoreGroups}개 영역 중 ${completedCoreGroups}개 완료 (${remainingGroupsCount}개 남음) ${isGroupMet ? '✔️' : ''}</strong>
+                </p>`;
+                // 2. 지성의 확장 학점 (새로운 정보) - 유지
+                html += `<p class="summary completed"><strong>지성의 확장 학점: ${details.totalExtensionCredits}학점 이수 (총 ${totalExtensionCourses}과목)</strong></p>`;  
+                
+                // 4. 이수한 과목 상세 - 유지
+                if (details.completedAcademiaCourses.length > 0) {
+                    const completedAcademiaList = details.completedAcademiaCourses.map(c => `${c.name} (${c.group})`).join(', ');
+                    html += `<p><strong>✅ 지성의 열쇠 이수 과목 (4개 영역 분류):</strong> ${completedAcademiaList}</p>`;
+                }
+                if (details.completedExtensionCourses.length > 0) {
+                    const completedExtensionList = details.completedExtensionCourses.map(c => `${c.name} (${c.credit}학점)`).join(', ');
+                    html += `<p><strong>✅ 지성의 확장 이수 과목:</strong> ${completedExtensionList}</p>`;
+                }
 
-    // 5. 미이수 영역 안내 - 유지
-    if (!isGroupMet && details.remainingGroups.length > 0) {
-        html += `<p><strong>📝 채워야 할 영역:</strong> ${details.remainingGroups.join(', ')}</p>`;
-        html += '<div class="recommendation-area multi-button-area">';
-        html += '<strong>💡 영역별 들을 수 있는 교양 (클릭하여 확인):</strong>';
-        for (const groupName of details.remainingGroups) {
-            const elementId = `courses-list-${encodeURIComponent(groupName)}`;
-            html += `<button class="toggle-button" onclick="toggleCourseList('${elementId}')">〈${groupName}〉 과목 목록</button>`;
-        }
-        for (const groupName of details.remainingGroups) {
-            const elementId = `courses-list-${encodeURIComponent(groupName)}`;
-            const coursesInGroup = details.recommendedCoursesByGroup[groupName] || [];
-            const courseListHtml = coursesInGroup.map(c => `<li>${c}</li>`).join('');
-            html += `<div id="${elementId}" class="course-list-hidden">
-                        <h4 class="list-title"><span class="highlight">〈${groupName}〉 과목 목록</span></h4>
-                        <ul class="recommended-list">${courseListHtml}</ul>
-                    </div>`;
-        }
-        html += '</div>';
-    }
-    break;
+                // 5. 미이수 영역 안내 - 유지
+                if (!isGroupMet && details.remainingGroups.length > 0) {
+                    html += `<p><strong>📝 채워야 할 영역:</strong> ${details.remainingGroups.join(', ')}</p>`;
+                    html += '<div class="recommendation-area multi-button-area">';
+                    html += '<strong>💡 영역별 들을 수 있는 교양 (클릭하여 확인):</strong>';
+                    for (const groupName of details.remainingGroups) {
+                        const elementId = `courses-list-${encodeURIComponent(groupName)}`;
+                        html += `<button class="toggle-button" onclick="toggleCourseList('${elementId}')">〈${groupName}〉 과목 목록</button>`;
+                    }
+                    for (const groupName of details.remainingGroups) {
+                        const elementId = `courses-list-${encodeURIComponent(groupName)}`;
+                        const coursesInGroup = details.recommendedCoursesByGroup[groupName] || [];
+                        const courseListHtml = coursesInGroup.map(c => `<li>${c}</li>`).join('');
+                        html += `<div id="${elementId}" class="course-list-hidden">
+                            <h4 class="list-title"><span class="highlight">〈${groupName}〉 과목 목록</span></h4>
+                            <ul class="recommended-list">${courseListHtml}</ul>
+                        </div>`;
+                    }
+                    html += '</div>';
+                }
+                break;
 
             case 'credit_count_simple':
                 const isOtherCompleted = details.remainingCredits === 0;
@@ -299,7 +316,7 @@ case 'academia_extension_group_count':
                 const isElecCompleted = details.neededCount === 0;
                 html += `<p class="summary ${isElecCompleted ? 'completed' : 'in-progress'}">
                              <strong>상태: ${details.requiredCount}개 이상 중 ${details.completedCount}개 완료 (${details.neededCount}개 더 필요) ${isElecCompleted ? '✔️' : ''}</strong>
-                         </p>`;
+                           </p>`;
                 
                 if (details.completed.length > 0) {
                     const completedElecList = details.completed.map(key => details.labels[key]);
@@ -368,18 +385,3 @@ function captureResults() {
             }
         });
 }
-ctor('input[type="number"]');
-        if (inputNumber) {
-            inputNumber.style.flexShrink = '0';
-        }
-    }
-    
-    // 4. h4 태그 (제목) 왼쪽 정렬 (index.html에서 직접 수정하는 것을 대체)
-    document.querySelectorAll('.course-section h4').forEach(h4 => {
-        h4.style.textAlign = 'left';
-        h4.style.marginTop = '15px'; 
-    });
-}
-
-window.addEventListener('DOMContentLoaded', applyLayoutFix);
-
