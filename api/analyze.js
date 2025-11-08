@@ -225,16 +225,27 @@ export default async function handler(req, res) {
             }
         });
 
+// --- 전공 인정 학점 (타단과대 & 예체능 전공) 합산 처리 ---
         const otherCollegeCredits = (allText.match(/타단과대 전공/g) || []).length;
-        if (otherCollegeCredits > 0) {
-            totalElectiveCredits += otherCollegeCredits;
-            completedElectiveCourses.push(`타단과대(자연대, 농생대, 공대, 수의대, 치대, 혁신공유학부) 전공 (${otherCollegeCredits}학점)`);
-        }
         // 예외 규칙 적용: 음미대/미학과 전공 학점 중복 인정
         const artsMajorAsElectiveCredits = (allText.match(/음미대, 미학과 전공\/교양/g) || []).length;
-        if (artsMajorAsElectiveCredits > 0) {
-            totalElectiveCredits += artsMajorAsElectiveCredits;
-            completedElectiveCourses.push(`(예체능 충족 예외 인정) 음미대/미학과 전공 (${artsMajorAsElectiveCredits}학점)`);
+
+        // 💡 수정된 부분: 두 학점을 합산하여 하나의 항목으로 처리
+        const combinedExtraElectiveCredits = otherCollegeCredits + artsMajorAsElectiveCredits;
+        
+        if (combinedExtraElectiveCredits > 0) {
+            totalElectiveCredits += combinedExtraElectiveCredits;
+            
+            // 💡 결과 목록에 합쳐서 표시
+            let combinedLabel = `타단과대 전공 (${otherCollegeCredits}학점)`;
+            if (artsMajorAsElectiveCredits > 0) {
+                 // 음미대/미학과 전공도 포함되었음을 명시
+                 combinedLabel = `타단과대 및 예체능 전공/교양 (${combinedExtraElectiveCredits}학점)`;
+            }
+            // completedElectiveCourses.push(`타단과대(자연대, 농생대, 공대, 수의대, 치대, 혁신공유학부) 전공 (${otherCollegeCredits}학점)`); // 기존 코드 삭제 또는 주석 처리
+            // completedElectiveCourses.push(`(예체능 충족 예외 인정) 음미대/미학과 전공 (${artsMajorAsElectiveCredits}학점)`); // 기존 코드 삭제 또는 주석 처리
+
+            completedElectiveCourses.push(combinedLabel);
         }
         
         const remainingCredits = Math.max(0, requiredElectiveCredits - totalElectiveCredits);
