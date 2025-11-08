@@ -553,13 +553,12 @@ export default async function handler(req, res) {
         const remainingOtherCredits = 0; 
 
         // 초과 학점만 합산
-        const totalOtherCredits = excessElectiveCredits + excessAcademiaCredits + excessExtensionCredits + excessVeritasCredits + excessArtsCredits;
+        const totalOtherCredits = excessElectiveCredits + excessAcademiaCredits + excessExtensionCredits + excessArtsCredits;
         
         const otherDescription = `
             *초과 교양 학점 합산 (전선 초과 ${excessElectiveCredits}학점 + 
             지성의열쇠 초과 ${excessAcademiaCredits}학점 + 
             지성의확장 ${totalExtensionCredits}학점 +
-            베리타스 초과 ${excessVeritasCredits}학점 +
             예체능 초과 ${excessArtsCredits}학점)
         `;
 
