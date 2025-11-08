@@ -382,3 +382,4 @@ ctor('input[type="number"]');
 }
 
 window.addEventListener('DOMContentLoaded', applyLayoutFix);
+
