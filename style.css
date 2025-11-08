@@ -443,3 +443,18 @@ button#analyze-button:hover {
         box-sizing: border-box;
     }
 }
+/* style.css 파일 가장 하단에 추가 */
+
+/* 💡 음미대/미학과 전공 항목 제목의 간격 조정 */
+#arts-major-title {
+    /* 기존 <h4>가 갖고 있는 큰 마진을 덮어씁니다. */
+    margin-top: 5px !important; 
+    margin-bottom: 5px !important;
+    /* !important는 기존 인라인 스타일이나 다른 CSS 규칙의 우선순위가 너무 높을 경우를 대비한 안전 장치입니다. */
+}
+
+/* 💡 해당 입력 필드를 감싸는 부모 섹션의 상단 간격도 필요하면 줄여줍니다. */
+/* index.html에서 해당 h4를 감싸는 div.sub-section이 있다면, 이 선택자를 사용할 수 있습니다. */
+.sub-section:has(#arts-major-title) {
+    margin-top: -10px; /* 위 섹션과의 간격을 더 줄입니다. */
+}
