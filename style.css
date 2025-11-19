@@ -434,7 +434,7 @@ button#analyze-button:hover {
 
     align-items: center;
 
-    margin-top: 15px;
+    margin-top: 5px;
 
     padding: 10px;
 
@@ -950,66 +950,3 @@ button#analyze-button:hover {
 
 }
 
-/* style.css 수정/추가 */
-
-
-
-/* 1. 예체능 섹션 내부의 p.sub-title-arts 제목 여백을 타이트하게 조정 */
-
-.sub-title-arts {
-
-    font-size: 0.9rem;
-
-    font-weight: bold; 
-
-    /* 💡 수정: 상단 마진은 유지하고 하단 마진을 최소화 */
-
-    margin-top: 10px; 
-
-    margin-bottom: 2px; /* 5px -> 2px로 축소 */
-
-}
-
-
-
-/* 2. 예체능 섹션 내부의 동적 입력 필드 컨테이너 여백을 타이트하게 조정 */
-
-/* '음미대, 미학과 전공/교양' 입력 필드가 포함된 부분입니다. */
-
-#section-arts-and-sports .extra-option-container {
-
-    /* 💡 수정: 상하 마진을 5px -> 2px로 축소 */
-
-    margin-top: 2px; /* 5px -> 2px로 축소 */
-
-    margin-bottom: 2px; /* 5px -> 2px로 축소 */
-
-    padding: 10px;
-
-    background-color: #f8f9fa;
-
-    border-radius: 5px;
-
-}
-
-
-
-/* 💡 추가: 선택 필드 (Choices.js) 자체의 위쪽 마진도 2px로 타이트하게 설정 */
-
-#section-arts-and-sports .choices {
-
-    margin-top: 2px;
-
-    margin-bottom: 5px; /* 아래쪽은 다음 제목과의 간격 확보 */
-
-}
-
-
-
-/* 3. 예체능 섹션 자체의 상/하 간격이 문제일 경우, 필요하다면 섹션 자체의 마진을 조정할 수 있습니다. */
-
-/* #section-arts-and-sports {
-
-    margin-bottom: 10px; 
-
-} */
