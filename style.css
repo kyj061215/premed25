@@ -434,7 +434,7 @@ button#analyze-button:hover {
 
     align-items: center;
 
-    margin-top: 5px;
+    margin-top: 0px;
 
     padding: 10px;
 
@@ -445,7 +445,6 @@ button#analyze-button:hover {
 }
   .extra-arts-title {
       margin-bottom: 3px;
-      margin-top: 5px;
   }
 
 
