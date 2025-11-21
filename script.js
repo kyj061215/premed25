@@ -127,6 +127,16 @@ analyzeButton.addEventListener('click', async () => {
             }
         }
 
+        const foundationCheckbox = document.getElementById('foundation-checkbox');
+        const foundationCountInput = document.getElementById('foundation-count'); 
+        if (foundationCheckbox && foundationCheckbox.checked && foundationCountInput && foundationCountInput.value) {
+            const count = parseInt(foundationCountInput.value, 10) || 0;
+            // analyze.js가 인식할 고유 문자열: 학점 수만큼 추가
+            for (let i = 0; i < count; i++) {
+                completedCourses.push('학문의 토대 초과'); 
+            }
+        }
+        
         // 💡 중요: 정규식 매칭을 위해 각 과목명 주변에 공백을 추가하여 안정성 확보
         const allText = ' ' + completedCourses.join(' ') + ' ';
         
