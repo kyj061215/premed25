@@ -538,6 +538,7 @@ export default async function handler(req, res) {
         // ======================================================
         // 10. 초과 학점 합산 (기타 섹션 대체)
         // ======================================================
+        const totalFoundationCredits = (allText.match(/학문의 토대 초과/g) || []).length;
         // 💡 실제 초과 학점 계산 (7학점 캡 적용 전)
         const actualExcessElectiveCredits = Math.max(0, totalElectiveCredits - requiredElectiveCredits);
         const ELECTIVE_CAP = 7;
@@ -555,7 +556,7 @@ export default async function handler(req, res) {
 
         // 💡 수정: 총 필요 학점을 12로 설정
         const requiredOtherCredits = 12; 
-        const totalOtherCredits = excessElectiveCredits + excessAcademiaCredits + excessExtensionCredits + excessVeritasCredits + excessArtsCredits;
+        const totalOtherCredits = excessElectiveCredits + excessAcademiaCredits + excessExtensionCredits + excessVeritasCredits + excessArtsCredits + totalFoundationCredits;
         // 💡 수정: 남은 학점 계산
         const remainingOtherCredits = Math.max(0, requiredOtherCredits - totalOtherCredits); 
 
@@ -569,6 +570,7 @@ export default async function handler(req, res) {
             - 지성의 열쇠 초과: ${excessAcademiaCredits}학점 <br>
             - 지성의 확장 (전체): ${totalExtensionCredits}학점 <br>
             - 예체능 초과: ${excessArtsCredits}학점 <br>
+            - 학문의 토대: ${totalFoundationCredits}학점 <br>
         `;
 
         analysisResult["초과 학점 합산"] = {
